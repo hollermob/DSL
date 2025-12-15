@@ -104,8 +104,6 @@ class Interpreter:
             # 遇到reply指令：立即输出并暂停
             message = self._resolve_variables_in_string(node.message)
             print(f"📤 输出回复: {message}")
-            self._execution_paused = True
-            self._pause_reason = "reply"
             return message  # 立即返回回复
 
         elif isinstance(node, SetNode):

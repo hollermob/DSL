@@ -154,11 +154,12 @@ class DSLController:
             # 使用从DSL解析的意图列表
             self.dsl_intents = self.parsed_intents if self.parsed_intents else ["其他"]
 
-            self.llm_classifier = IntentClassifier(api_key=self.llm_api_key)
+            # self.llm_classifier = IntentClassifier(api_key=self.llm_api_key)
             print("✅ LLM模块初始化成功")
         except Exception as e:
             print(f"⚠️ LLM模块初始化失败，将使用关键词匹配: {e}")
             self.llm_classifier = None
+
 
     def _register_external_functions(self):
         """注册外部函数到解释器"""

@@ -245,12 +245,64 @@ class ChatbotGUI:
             # 设置用户输入变量
             self.controller.runtime.set_variable("$user_input", user_input)
 
-            # 执行脚本
+            # # 执行脚本
+            # replies = self.controller._execute_script()
+
+            # # 显示机器人回复
+            # for reply in replies:
+            #     self.add_message("🤖 机器人", reply, is_bot=True)
+
+            # # 恢复状态
+            # self.update_status("系统就绪，请输入消息...")
+            # 第一步：执行到get_intent并暂停
             replies = self.controller._execute_script()
 
-            # 显示机器人回复
+            # 显示已经产生的回复（如果有）
             for reply in replies:
                 self.add_message("🤖 机器人", reply, is_bot=True)
+
+            # 检查是否在get_intent处暂停
+            if self.controller.interpreter.is_execution_paused() and \
+                    self.controller.interpreter.get_pause_reason() == "get_intent":
+
+                # 显示意图识别中...
+                self.update_status("正在识别您的意图...")
+
+                # 手动触发意图识别
+                input_text = self.controller.runtime.get_variable("$user_input", "")
+
+                # 使用LLM识别意图
+                if self.controller.llm_classifier:
+                    try:
+                        intent = self.controller.llm_classifier.get_intent(
+                            input_text,
+                            self.controller.dsl_intents
+                        )
+                        print(f"🤖 LLM识别意图: {intent}")
+
+                        # 设置意图变量
+                        self.controller.runtime.set_variable("$intent", intent)
+
+                        # 恢复执行（继续执行if判断等）
+                        self.controller.interpreter.resume_execution()
+
+                        # 继续执行剩余脚本
+                        self.update_status("正在生成回复...")
+                        more_replies = self.controller._execute_script()
+
+                        # 显示剩余的回复
+                        for reply in more_replies:
+                            self.add_message("🤖 机器人", reply, is_bot=True)
+
+                    except Exception as e:
+                        print(f"⚠️ LLM识别失败: {e}")
+                        self.add_message("🤖 机器人",
+                                             "抱歉，意图识别失败，请重新输入。",
+                                             is_bot=True)
+                    else:
+                        self.add_message("🤖 机器人",
+                                     "意图识别模块未初始化。",
+                                     is_bot=True)
 
             # 恢复状态
             self.update_status("系统就绪，请输入消息...")

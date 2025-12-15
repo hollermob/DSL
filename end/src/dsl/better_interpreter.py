@@ -13,6 +13,16 @@ class Interpreter:
         self._resolved_gotos = set()  # 已解析的goto引用
         self._label_statements_processed = set()  # 已处理的标签语句行号
 
+        self._execution_paused = False  # 是否暂停执行
+        self._pause_reason = None  # 暂停原因
+        self._pending_replies = []  # 待输出的回复
+
+        self._pause_instructions = {
+            "reply",  # 遇到reply应该输出并暂停
+            "get_intent"  # 遇到get_intent应该暂停并等待输入
+        }
+
+
     def register_function(self, name: str, func: Callable):
         """注册外部函数"""
         self.external_functions[name] = func
@@ -66,6 +76,7 @@ class Interpreter:
     def _execute_node(self, node: ASTNode, current_line: int) -> Optional[str]:
         """执行单个AST节点，返回回复消息"""
         self._has_jumped = False
+        self._execution_paused = False  # 重置暂停状态
         reply_message = None
 
         if isinstance(node, LabelDeclarationsNode):
@@ -85,10 +96,17 @@ class Interpreter:
             self._label_statements_processed.add(current_line)
             # 不产生回复，继续执行下一语句
 
+        # elif isinstance(node, ReplyNode):
+        #     message = self._resolve_variables_in_string(node.message)
+        #     reply_message = message
+        #     self.runtime.set_reply(message)
         elif isinstance(node, ReplyNode):
+            # 遇到reply指令：立即输出并暂停
             message = self._resolve_variables_in_string(node.message)
-            reply_message = message
-            self.runtime.set_reply(message)
+            print(f"📤 输出回复: {message}")
+            self._execution_paused = True
+            self._pause_reason = "reply"
+            return message  # 立即返回回复
 
         elif isinstance(node, SetNode):
             value = node.value
@@ -98,26 +116,36 @@ class Interpreter:
                     raise RuntimeError(f"未定义变量: {value}")
                 value = actual_value
             self.runtime.set_variable(node.var_name, value)
+            print(f"🔧 设置变量: {node.var_name} = {value}")
 
+        # elif isinstance(node, GetIntentNode):
+        #     if "get_intent" in self.external_functions:
+        #         input_text = self.runtime.get_variable(node.var_name, "")
+        #         intent = self.external_functions["get_intent"](input_text)
+        #         self.runtime.set_variable("intent", intent)
+        #         # 清除已处理的标签标记，以便后续跳转能正确执行
+        #         self._label_statements_processed.clear()
+        #     else:
+        #         raise RuntimeError("get_intent函数未注册")
         elif isinstance(node, GetIntentNode):
-            if "get_intent" in self.external_functions:
-                input_text = self.runtime.get_variable(node.var_name, "")
-                intent = self.external_functions["get_intent"](input_text)
-                self.runtime.set_variable("intent", intent)
-                # 清除已处理的标签标记，以便后续跳转能正确执行
-                self._label_statements_processed.clear()
-            else:
-                raise RuntimeError("get_intent函数未注册")
+            # 遇到get_intent指令：暂停并等待外部处理
+            print(f"⏸️ 等待意图识别: {node.var_name}")
+            self._execution_paused = True
+            self._pause_reason = "get_intent"
+            return None
 
         elif isinstance(node, IfNode):
             var_value = self.runtime.get_variable(node.var_name, "")
+            print(f"🔍 条件判断: {node.var_name} == '{node.compare_value}'? 当前值: '{var_value}'")
             if var_value == node.compare_value:
                 self._jump_to_label(node.target_label, current_line)
 
         elif isinstance(node, GotoNode):
+            print(f"➡️ 跳转到: {node.target_label}")
             self._jump_to_label(node.target_label, current_line)
 
         elif isinstance(node, ExitNode):
+            print("🛑 执行退出指令")
             self.runtime.should_exit = True
 
         else:
@@ -201,3 +229,29 @@ class Interpreter:
             result = result.replace(var_name, str(var_value))
 
         return result
+
+    def execute_script_step(self, script: ScriptNode) -> Optional[str]:
+        """单步执行脚本：执行一条指令后返回（如果暂停）"""
+        if self.runtime.current_line >= len(script.statements):
+            return None
+
+        node = script.statements[self.runtime.current_line]
+        result = self._execute_node(node, self.runtime.current_line)
+
+        if not self._has_jumped:
+            self.runtime.current_line += 1
+
+        return result
+
+    def is_execution_paused(self) -> bool:
+        """检查执行是否暂停"""
+        return self._execution_paused
+
+    def get_pause_reason(self) -> Optional[str]:
+        """获取暂停原因"""
+        return self._pause_reason
+
+    def resume_execution(self):
+        """恢复执行"""
+        self._execution_paused = False
+        self._pause_reason = None

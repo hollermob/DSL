@@ -1,6 +1,6 @@
-#labels {wait_for_input:, process_intent:, show_products:, add_to_cart:, customer_service:, check_order:, exit_program:, handle_other:}
+labels {wait_for_input:, process_intent:, show_products:, add_to_cart:, customer_service:, check_order:, exit_program:, handle_other:}
 
-#intents { "查询所有商品", "加入用户购物车", "咨询客服", "订单查询","退出系统","其他"}
+intents { "查询所有商品", "加入用户购物车", "咨询客服", "订单查询","退出系统","其他"}
 
 wait_for_input:
     reply "请告诉我您需要什么帮助？"

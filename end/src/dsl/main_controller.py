@@ -309,8 +309,28 @@ class DSLController:
                 raise ValueError("脚本未初始化")
 
             # 执行脚本
-            replies = self.interpreter.execute_script(self.script_ast)
+            # replies = self.interpreter.execute_script(self.script_ast)
+            replies = []
 
+            # 重置暂停状态
+            self.interpreter.resume_execution()
+
+            # 逐步执行脚本，遇到暂停指令就停止
+            while (self.runtime.current_line < len(self.script_ast.statements) and
+                   not self.runtime.should_exit):
+
+                # 执行单条指令
+                result = self.interpreter.execute_script_step(self.script_ast)
+
+                # 如果有回复，添加到列表
+                if result:
+                    replies.append(result)
+
+                # 如果执行暂停，停止继续执行
+                if self.interpreter.is_execution_paused():
+                    pause_reason = self.interpreter.get_pause_reason()
+                    print(f"⏸️ 执行暂停，原因: {pause_reason}")
+                    break
             # 记录机器人回复
             for reply in replies:
                 self.conversation_history.append({

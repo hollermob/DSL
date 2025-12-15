@@ -1,0 +1,60 @@
+#labels {wait_for_input:, process_intent:, show_products:, add_to_cart:, customer_service:, check_order:, exit_program:, handle_other:}
+
+#intents { "查询所有商品", "加入用户购物车", "咨询客服", "订单查询","退出系统","其他"}
+
+wait_for_input:
+    reply "请告诉我您需要什么帮助？"
+    goto process_intent:
+
+process_intent:
+    get_intent $user_input
+    reply "我识别到您的意图是: $intent"
+
+    # 根据意图跳转到不同的处理流程
+    if $intent == "查询所有商品" then goto show_products:
+    if $intent == "加入用户购物车" then goto add_to_cart:
+    if $intent == "咨询客服" then goto customer_service:
+    if $intent == "订单查询" then goto check_order:
+    if $intent == "退出系统" then goto exit_program:
+    if $intent == "其他" then goto handle_other:
+   
+    goto handle_other:
+
+# 显示商品
+show_products:
+    reply "我们有以下商品："
+    reply "1. 智能手机 - ¥2999"
+    reply "2. 笔记本电脑 - ¥6999"
+    reply "3. 无线耳机 - ¥599"
+    reply "您对哪款商品感兴趣呢？"
+    goto wait_for_input:
+
+# 加入购物车
+add_to_cart:
+    reply "请输入您想加入购物车的商品名称："
+    reply "商品已添加到购物车！"
+    goto wait_for_input:
+
+# 客服咨询
+customer_service:
+    reply "正在为您转接人工客服..."
+    reply "客服工作时间：9:00-18:00"
+    reply "您也可以拨打客服电话：400-123-4567"
+    goto wait_for_input:
+
+# 订单查询
+check_order:
+    reply "正在查询您的订单..."
+    reply "订单状态：已发货"
+    reply "预计明天送达"
+    goto wait_for_input:
+
+# 其他意图处理
+handle_other:
+    reply "抱歉，我不太明白您的意思。"
+    goto wait_for_input:
+
+# 退出程序
+exit_program:
+    reply "感谢使用，再见！"
+    exit

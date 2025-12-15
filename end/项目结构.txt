@@ -1,0 +1,17 @@
+shop_agent/
+├── src/
+│   ├── __init__.py
+│   ├── dsl/
+│   │   ├── __init__.py
+│   │   ├── lexer.py       # 词法分析器
+│   │   ├── parser.py      # 语法分析器
+│   │   ├── nodes.py       # AST节点定义
+│   │   └── interpreter.py # 解释器
+│   └── main.py            # 后续的主程序入口
+├── examples/              # DSL脚本范例
+│   ├── product_query.dsl
+│   └── shopping_cart.dsl
+└── tests/                 # 测试文件
+
+
+_qimei_uuid42=199081701291004714b3129089e7a6652172637a68; _qimei_i_3=6fc82ed1c45250d8c191ad385ad177e8f3eda5f5130951d0e587795d2494296d67663f943a89e288a8fd; _qimei_h38=19c5488c14b3129089e7a66502000007419908; hy_source=web; hy_user=6817a3a909ba43108975bf00dcc171d9; _ga=GA1.1.1186063916.1761569747; _qimei_fingerprint=1d1ef24a327598829142a473682fa038; _gcl_au=1.1.161942492.1763974392; hy_token=8tE8bq6InCxff5mUqQZfc9aGHP6NPD80Cr/k258SiLJ9CYW8HiMzU5pREYyvnbvjWupN1dfHXCrs6CQDnjIBSvxed5i9SfvVRmzUSHIecU6O5SHuVVusqvJXo+uLiSMibZn0lcQvHM0DC+JoABjkDsKjbRqrz+xcZxqx6CFEgj06BLsHMSa95NLAJeluoYF5iNjquwe/eIWCfnI3zvvkiVkN/ZBwpEZTuu383nCx7F5TiNOY/7vNEWIMj3HZlg1Df13vFAeaxO71ooqux0ccWtEq5zgXzOnnvTL+8dpDWcoZggpmTqe2DW89Eop0NtBZObxH4j5m1fIIKeEMa1r89yUs/2YNbzuHyvfm8ZlQBs/WnJRQfanwbOucu9LWN9SNrk/7Q0alobjVxWgQDKc00SrvXz2wzI8nF/kT8RF45qwBaEzdN+n8E//5hBj3j/XUkYmTSU6mtboNvDGdBiYxdJKgtW0seVuOuqO+q7PsG3JAVoCukiQDzEJDXvA0W3vXsWCDQF/JVVatvhmsgNBtwf4Mxvy9ksiOPsopf+2x9Z8e/fj8ukyIBoVHb676eFUn6fPzQW7DbLOWfbimrIek2XHs2OLBarn4PlykLUeVZFP+8wIhRRSINyLd0VGg7MeHJ34mCakXXDI2FfqtHJXWtz1BeqvSacFJxiUdNl1H8AE=; qcloud_visitId=7da27283378805a4354b7720c85f4c39; qcloud_from=qcloud.bing.seo-1765376506483; sajssdk_2015_cross_new_user=1; sensorsdata2015jssdkcross=%7B%22distinct_id%22%3A%2219b08a3ba812338-0666ae519c68c9c-4c657b58-1821369-19b08a3ba82138a%22%2C%22first_id%22%3A%22%22%2C%22props%22%3A%7B%22%24latest_traffic_source_type%22%3A%22%E8%87%AA%E7%84%B6%E6%90%9C%E7%B4%A2%E6%B5%81%E9%87%8F%22%7D%2C%22identities%22%3A%22eyIkaWRlbnRpdHlfY29va2llX2lkIjoiMTliMDhhM2JhODEyMzM4LTA2NjZhZTUxOWM2OGM5Yy00YzY1N2I1OC0xODIxMzY5LTE5YjA4YTNiYTgyMTM4YSJ9%22%2C%22history_login_id%22%3A%7B%22name%22%3A%22%22%2C%22value%22%3A%22%22%7D%7D; qcstats_seo_keywords=%E4%BA%91%E4%BA%A7%E5%93%81-%E6%96%87%E6%A1%A3-%E6%96%87%E6%A1%A3; _qimei_i_1=27cd7f839c0955dfc99fad315fd670e1f5e7a4f91b0e04d3b2892d582493206c616330913980ebdcde84cec3; _ga_6P1G7NCG3R=GS2.1.s1765371242$o116$g1$t1765376565$j60$l0$h875405218

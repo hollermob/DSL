@@ -1,0 +1,23 @@
+# 语句
+script        := label_declarations? (statement)*
+label_declarations := "labels" "{" label_name ("," label_name)* "}"
+
+statement     := reply_stmt | set_stmt | if_stmt | goto_stmt | label | get_intent_stmt | exit_stmt | intents_stmt
+
+# 新增意图定义语句
+intents_stmt  := "intents" "{" string_literal ("," string_literal)* "}"
+
+# 基本指令
+reply_stmt    := "reply" string_literal
+set_stmt      := "set" variable "=" (string_literal | variable)
+get_intent_stmt := "get_intent" variable
+exit_stmt     := "exit"
+goto_stmt     := "goto" label_name
+label         := label_name ":"
+if_stmt       := "if" variable "==" string_literal "then" "goto" label_name
+
+# 基础元素
+variable      := "$" identifier
+label_name    := identifier
+string_literal := "\"" [^"]* "\"" 
+identifier    := [a-zA-Z_][a-zA-Z0-9_]*

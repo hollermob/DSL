@@ -1,0 +1,16 @@
+{
+  "script_path": "chatbot.dsl",          // DSL脚本文件路径
+  "llm_api_key": "your-api-key-here",    // DeepSeek API密钥
+  "intents": [                           // 可能的意图列表
+    "查询商品",
+    "加入购物车", 
+    "咨询客服",
+    "订单查询",
+    "退出系统"
+  ],
+  "use_gui": true,                       // 是否使用图形界面
+  "max_history": 100,                    // 最大对话历史记录数
+  "timeout": 30,                         // 请求超时时间（秒）
+  "log_level": "INFO",                   // 日志级别
+  "log_file": "chatbot.log"              // 日志文件路径
+}

@@ -19,12 +19,20 @@ class ScriptNode(ASTNode):
 
 
 # 标签定义节点，如: main_loop:
+# class LabelNode(ASTNode):
+#     def __init__(self, name: str):
+#         self.name = name
+#
+#     def __repr__(self) -> str:
+#         return f"Label({self.name})"
 class LabelNode(ASTNode):
-    def __init__(self, name: str):
+    def __init__(self, name: str, is_definition: bool = False):
         self.name = name
+        self.is_definition = is_definition  # 新增：是否是定义
 
     def __repr__(self) -> str:
-        return f"Label({self.name})"
+        prefix = "@" if self.is_definition else ""
+        return f"Label({prefix}{self.name})"
 
 
 # 回复指令节点，如: reply "Hello"
@@ -104,3 +112,4 @@ class PauseForInputNode(ASTNode):
 
     def __repr__(self):
         return "PauseForInputNode()"
+

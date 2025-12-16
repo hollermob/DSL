@@ -77,8 +77,21 @@ class Parser:
 
     def parse_label(self) -> LabelNode:
         """解析标签定义，如: main_loop:"""
+        # token = self.eat(TokenType.LABEL)
+        # return LabelNode(token.value)
+        # 检查是否有 @ 符号
+        has_at_symbol = False
+        if self.current_token and self.current_token.type == TokenType.AT_SYMBOL:
+            self.eat(TokenType.AT_SYMBOL)
+            has_at_symbol = True
+
         token = self.eat(TokenType.LABEL)
-        return LabelNode(token.value)
+        label_node = LabelNode(token.value)
+
+        # 可以添加一个属性标记这是定义（而不是引用）
+        label_node.is_definition = has_at_symbol
+
+        return label_node
 
     def parse_intents(self) -> IntentsNode:
         """解析意图定义语句，如: intents {"greeting", "query_product"}"""

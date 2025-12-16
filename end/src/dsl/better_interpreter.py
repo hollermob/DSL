@@ -87,11 +87,27 @@ class Interpreter:
             # 处理意图定义节点
             self.runtime.set_defined_intents(node.intent_names)
             print(f"📋 定义意图列表: {node.intent_names}")
+        # elif isinstance(node, LabelNode):
+        #     # 标签定义：只记录位置，不执行任何操作
+        #     # 检查标签是否已定义，避免重复处理
+        #     if node.name not in self._label_cache or self._label_cache[node.name] == -1:
+        #         self._define_label(node.name, current_line)
+        #     # 标记标签语句已处理
+        #     self._label_statements_processed.add(current_line)
+        #     # 不产生回复，继续执行下一语句
         elif isinstance(node, LabelNode):
             # 标签定义：只记录位置，不执行任何操作
-            # 检查标签是否已定义，避免重复处理
-            if node.name not in self._label_cache or self._label_cache[node.name] == -1:
-                self._define_label(node.name, current_line)
+            # 但只有带@的标签才是真正的定义位置
+            if node.is_definition:
+                if node.name not in self._label_cache or self._label_cache[node.name] == -1:
+                    self._define_label(node.name, current_line)
+                    print(f"📍 定义标签: {node.name} -> 第{current_line}行")
+                else:
+                    print(f"⚠️ 标签重复定义: {node.name}")
+            else:
+                # 不带@的标签引用，只做标记，不定义位置
+                print(f"🏷️  标签引用: {node.name}")
+
             # 标记标签语句已处理
             self._label_statements_processed.add(current_line)
             # 不产生回复，继续执行下一语句

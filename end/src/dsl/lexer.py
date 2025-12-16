@@ -24,6 +24,7 @@ class TokenType:
     RBRACE = "RBRACE"
     COMMA = "COMMA"
     PAUSE_FOR_INPUT = "PAUSE_FOR_INPUT"
+    AT_SYMBOL = "AT_SYMBOL"
 
 class Token:
     def __init__(self, type: str, value: str, line: int, column: int):
@@ -59,6 +60,7 @@ class Lexer:
             (TokenType.LBRACE, r'\{'),
             (TokenType.RBRACE, r'\}'),
             (TokenType.COMMA, r','),
+            (TokenType.AT_SYMBOL, r'@'),
             (TokenType.STRING, r'\"[^\"]*\"'),
             (TokenType.VARIABLE, r'\$[a-zA-Z_][a-zA-Z0-9_]*'),
             (TokenType.LABEL, r'[a-zA-Z_][a-zA-Z0-9_]*:'),

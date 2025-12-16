@@ -309,6 +309,14 @@ class DSLController:
         try:
             if not self.script_ast:
                 raise ValueError("脚本未初始化")
+            #新增
+            # 设置当前脚本
+            self.runtime.current_script = self.script_ast
+
+            # 在执行前确保标签已扫描
+            if not self.interpreter._label_cache:
+                print("🔍 扫描标签定义...")
+                self.interpreter._scan_labels(self.script_ast)
 
             # 执行脚本
             # replies = self.interpreter.execute_script(self.script_ast)
@@ -347,6 +355,9 @@ class DSLController:
 
         except Exception as e:
             print(f"❌ 脚本执行错误: {e}")
+            #增2行
+            import traceback
+            traceback.print_exc()
             return ["抱歉，系统出现错误，请稍后再试。"]
 
     def get_conversation_history(self) -> List[Dict]:

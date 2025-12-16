@@ -33,8 +33,10 @@ class Interpreter:
         # 第一阶段：扫描所有标签定义
         self._scan_labels(script)
 
-        # 第二阶段：执行脚本
-        self._execute_script_phase2(script, replies)
+        # # 第二阶段：执行脚本
+        # self._execute_script_phase2(script, replies)
+        # 第二步：从当前行开始执行
+        self._execute_from_current(script, replies)
 
         return replies
 
@@ -45,6 +47,37 @@ class Interpreter:
         for line_num, node in enumerate(script.statements):
             if isinstance(node, LabelNode):
                 self._define_label(node.name, line_num)
+
+    def _execute_from_current(self, script: ScriptNode, replies: List[str]):
+        """从当前行开始执行"""
+        max_iterations = 1000
+        iteration_count = 0
+
+        while (self.runtime.current_line < len(script.statements) and
+               not self.runtime.should_exit and
+               iteration_count < max_iterations):
+
+            node = script.statements[self.runtime.current_line]
+            result = self._execute_node(node, self.runtime.current_line)
+
+            if result and isinstance(result, str):
+                replies.append(result)
+
+            # 如果没有跳转，前进到下一行
+            if not self._has_jumped:
+                self.runtime.current_line += 1
+            else:
+                self._has_jumped = False
+
+            # 检查是否需要暂停
+            if self._execution_paused:
+                break
+
+            iteration_count += 1
+
+        if iteration_count >= max_iterations:
+            print("⚠️ 可能检测到无限循环")
+
 
     def _execute_script_phase2(self, script: ScriptNode, replies: List[str]):
         """第二阶段：执行脚本"""
@@ -197,30 +230,54 @@ class Interpreter:
             self._resolved_gotos.add(label_name)
             del self._pending_gotos[label_name]
 
+    # def _jump_to_label(self, label_name: str, current_line: int):
+    #     """跳转到标签：如果标签已声明直接跳转，否则记录待解析"""
+    #     if label_name in self._label_cache:
+    #         # 标签已声明
+    #         target_line = self._label_cache[label_name]
+    #         if target_line != -1:  # 标签位置已确定
+    #             # 检查目标行是否是标签定义语句
+    #             if target_line in self._label_statements_processed:
+    #                 # 如果目标行是标签定义，跳转到下一行
+    #                 target_line += 1
+    #                 print(f"🔧 调整跳转位置: {label_name} -> 第{target_line}行（跳过标签定义）")
+    #
+    #             self.runtime.current_line = target_line
+    #             self._has_jumped = True
+    #             print(f"🔀 跳转到: {label_name} (第{target_line}行)")
+    #         else:
+    #             # 标签已声明但位置未知，记录待解析
+    #             if label_name not in self._pending_gotos:
+    #                 self._pending_gotos[label_name] = []
+    #             self._pending_gotos[label_name].append(current_line)
+    #             print(f"⏳ 等待标签定义: {label_name} (从第{current_line}行引用)")
+    #     else:
+    #         # 标签未声明，报错
+    #         raise RuntimeError(f"未声明的标签: {label_name}")
     def _jump_to_label(self, label_name: str, current_line: int):
-        """跳转到标签：如果标签已声明直接跳转，否则记录待解析"""
+        """跳转到标签"""
         if label_name in self._label_cache:
-            # 标签已声明
             target_line = self._label_cache[label_name]
-            if target_line != -1:  # 标签位置已确定
-                # 检查目标行是否是标签定义语句
-                if target_line in self._label_statements_processed:
-                    # 如果目标行是标签定义，跳转到下一行
+
+            # 确保目标行是有效的
+            if target_line < len(self.runtime.current_script.statements):
+                # 如果目标行是标签定义行，跳转到下一行
+                next_node = self.runtime.current_script.statements[target_line + 1] if target_line + 1 < len(
+                    self.runtime.current_script.statements) else None
+
+                # 判断是否需要跳转到标签的下一行
+                if isinstance(self.runtime.current_script.statements[target_line], LabelNode):
                     target_line += 1
-                    print(f"🔧 调整跳转位置: {label_name} -> 第{target_line}行（跳过标签定义）")
 
                 self.runtime.current_line = target_line
                 self._has_jumped = True
-                print(f"🔀 跳转到: {label_name} (第{target_line}行)")
+                print(f"✅ 跳转成功: {label_name} -> 第{target_line}行")
             else:
-                # 标签已声明但位置未知，记录待解析
-                if label_name not in self._pending_gotos:
-                    self._pending_gotos[label_name] = []
-                self._pending_gotos[label_name].append(current_line)
-                print(f"⏳ 等待标签定义: {label_name} (从第{current_line}行引用)")
+                raise RuntimeError(f"标签位置越界: {label_name}")
         else:
-            # 标签未声明，报错
-            raise RuntimeError(f"未声明的标签: {label_name}")
+            print(f"❌ 未定义的标签: {label_name}")
+            # 不再抛出异常，而是继续执行下一行
+            self._has_jumped = False
 
     def _check_unresolved_labels(self):
         """检查是否有未解析的标签引用"""

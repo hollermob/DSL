@@ -16,6 +16,8 @@ class RuntimeEnvironment:
         self.last_reply: Optional[str] = None
         # 意图定义存储
         self.defined_intents: List[str] = []
+        # 添加对当前脚本的引用
+        self.current_script = None
 
     def set_defined_intents(self, intents: List[str]):
         """设置定义的意图列表"""
@@ -66,3 +68,6 @@ class RuntimeEnvironment:
         self.current_line = 0
         self.should_exit = False
         self.last_reply = None
+    def set_current_script(self, script):
+        """设置当前正在执行的脚本"""
+        self.current_script = script

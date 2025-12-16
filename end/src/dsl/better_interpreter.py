@@ -96,14 +96,10 @@ class Interpreter:
             self._label_statements_processed.add(current_line)
             # 不产生回复，继续执行下一语句
 
-        # elif isinstance(node, ReplyNode):
-        #     message = self._resolve_variables_in_string(node.message)
-        #     reply_message = message
-        #     self.runtime.set_reply(message)
+
         elif isinstance(node, ReplyNode):
             # 遇到reply指令：立即输出并暂停
             message = self._resolve_variables_in_string(node.message)
-            print(f"📤 输出回复: {message}")
             return message  # 立即返回回复
 
         elif isinstance(node, SetNode):
@@ -116,20 +112,32 @@ class Interpreter:
             self.runtime.set_variable(node.var_name, value)
             print(f"🔧 设置变量: {node.var_name} = {value}")
 
-        # elif isinstance(node, GetIntentNode):
-        #     if "get_intent" in self.external_functions:
-        #         input_text = self.runtime.get_variable(node.var_name, "")
-        #         intent = self.external_functions["get_intent"](input_text)
-        #         self.runtime.set_variable("intent", intent)
-        #         # 清除已处理的标签标记，以便后续跳转能正确执行
-        #         self._label_statements_processed.clear()
-        #     else:
-        #         raise RuntimeError("get_intent函数未注册")
+        elif isinstance(node, PauseForInputNode):
+            # 等待用户输入
+            print(f"⏸️ 等待用户输入...")
+            self._execution_paused = True
+            self._pause_reason = "wait_for_input"
+            return None
+
         elif isinstance(node, GetIntentNode):
             # 遇到get_intent指令：暂停并等待外部处理
-            print(f"⏸️ 等待意图识别: {node.var_name}")
-            self._execution_paused = True
-            self._pause_reason = "get_intent"
+            print(f"⏸️ 执行意图识别: {node.var_name}")
+            # self._execution_paused = True
+            # self._pause_reason = "get_intent"
+
+            # 获取用户输入
+            user_input = self.runtime.get_variable("$user_input", "")
+
+            # 调用外部函数识别意图
+            if "get_intent" in self.external_functions:
+                intent = self.external_functions["get_intent"](user_input)
+                print(f"✅ 识别到意图: {intent}")
+
+                # 设置意图变量
+                self.runtime.set_variable("$intent", intent)
+            else:
+                print(f"⚠️ get_intent函数未注册")
+
             return None
 
         elif isinstance(node, IfNode):

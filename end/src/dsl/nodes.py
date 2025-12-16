@@ -94,3 +94,13 @@ class LabelDeclarationsNode(ASTNode):
 
     def __repr__(self) -> str:
         return f"LabelDeclarations({self.label_names})"
+
+
+class PauseForInputNode(ASTNode):
+    """暂停等待用户输入节点"""
+
+    def __init__(self):
+        super().__init__()
+
+    def __repr__(self):
+        return "PauseForInputNode()"

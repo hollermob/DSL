@@ -23,6 +23,7 @@ class TokenType:
     LBRACE = "LBRACE"
     RBRACE = "RBRACE"
     COMMA = "COMMA"
+    PAUSE_FOR_INPUT = "PAUSE_FOR_INPUT"
 
 class Token:
     def __init__(self, type: str, value: str, line: int, column: int):
@@ -50,6 +51,7 @@ class Lexer:
             (TokenType.REPLY, r'reply'),
             (TokenType.SET, r'set'),
             (TokenType.GET_INTENT, r'get_intent'),
+            (TokenType.PAUSE_FOR_INPUT, r'pause_for_user_input'),
             (TokenType.IF, r'if'),
             (TokenType.THEN, r'then'),
             (TokenType.GOTO, r'goto'),

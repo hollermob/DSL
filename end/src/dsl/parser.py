@@ -70,6 +70,8 @@ class Parser:
             return self.parse_goto()
         elif self.current_token.type == TokenType.EXIT:
             return self.parse_exit()
+        elif self.current_token.type == TokenType.PAUSE_FOR_INPUT:
+            return self.parse_pause_for_input()
         else:
             raise SyntaxError(f"Unexpected token {self.current_token.type} at line {self.current_token.line}")
 
@@ -170,3 +172,8 @@ class Parser:
         print(self.current_token.type)
         self.eat(TokenType.RBRACE)
         return LabelDeclarationsNode(label_names)
+
+    def parse_pause_for_input(self) -> PauseForInputNode:
+        """解析暂停等待用户输入语句"""
+        self.eat(TokenType.PAUSE_FOR_INPUT)
+        return PauseForInputNode()

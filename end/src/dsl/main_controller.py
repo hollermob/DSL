@@ -154,7 +154,7 @@ class DSLController:
             # 使用从DSL解析的意图列表
             self.dsl_intents = self.parsed_intents if self.parsed_intents else ["其他"]
 
-            # self.llm_classifier = IntentClassifier(api_key=self.llm_api_key)
+            self.llm_classifier = IntentClassifier(api_key="sk-5dd634970d3e447b99b7e9ad631a5e80")
             print("✅ LLM模块初始化成功")
         except Exception as e:
             print(f"⚠️ LLM模块初始化失败，将使用关键词匹配: {e}")
@@ -182,6 +182,7 @@ class DSLController:
                         self.dsl_intents = self.parsed_intents if self.parsed_intents else ["其他"]
 
                     # 调用LLM进行意图识别
+                    print(user_input, self.dsl_intents)
                     intent = self.llm_classifier.get_intent(
                         user_input,
                         self.dsl_intents
@@ -311,6 +312,7 @@ class DSLController:
 
             # 执行脚本
             # replies = self.interpreter.execute_script(self.script_ast)
+            # print("!!!!!\n\n\n",replies)
             replies = []
 
             # 重置暂停状态
@@ -332,6 +334,7 @@ class DSLController:
                     pause_reason = self.interpreter.get_pause_reason()
                     print(f"⏸️ 执行暂停，原因: {pause_reason}")
                     break
+
             # 记录机器人回复
             for reply in replies:
                 self.conversation_history.append({

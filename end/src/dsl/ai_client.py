@@ -36,6 +36,7 @@ class IntentClassifier:
         Returns:
             最匹配的意图字符串
         """
+
         # 构建系统提示词
         system_prompt = """你是一个意图分类助手。你的任务是从给定的意图列表中，选择最符合用户消息的意图。
 
@@ -44,7 +45,7 @@ class IntentClassifier:
 2. 不要添加任何解释或额外文本
 3. 如果消息明显不符合任何意图，返回"其他信息"
 4. 如果有多个意图存在，判断哪个最重要（比如，识别到"问候"和“查询商品”，显然“查询商品”才是用户主要想要的），如果同样重要，则以返回第一个意图
-5. 用户可能会给出否定句（如“不退出”），你要正确判断其意图
+5. 用户可能会给出否定句（如“不退出”），这种情况下，你可以将它归为“其他”
 
 意图列表：""" + ", ".join(may_intent)
 
@@ -62,14 +63,13 @@ class IntentClassifier:
 
             # 提取回复
             result = response.choices[0].message.content.strip()
-
             # 验证结果是否在意图列表中
             if result in may_intent:
                 return result
             else:
                 # 如果返回的不在列表中，尝试查找最相似的
-                return self._fallback_intent(message, may_intent, result)
+                return "其他"
 
         except Exception as e:
             print(f"API调用错误: {e}")
-            return self._fallback_intent(message, may_intent)
+            return "其他"

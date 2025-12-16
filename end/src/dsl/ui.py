@@ -169,7 +169,8 @@ class ChatbotGUI:
 
             # 显示欢迎消息
             self.update_status("系统就绪，请输入消息...")
-            self.add_message("🤖 机器人", "您好！我是DSL聊天助手，有什么可以帮助您？", is_bot=True)
+            self.add_message("🤖 机器人", "您好！我是DSL聊天助手，请输入任意信息开始我们的聊天:)", is_bot=True)
+
 
         except Exception as e:
             messagebox.showerror("初始化错误", f"系统初始化失败:\n{str(e)}")
@@ -290,6 +291,7 @@ class ChatbotGUI:
                         self.update_status("正在生成回复...")
                         more_replies = self.controller._execute_script()
 
+
                         # 显示剩余的回复
                         for reply in more_replies:
                             self.add_message("🤖 机器人", reply, is_bot=True)
@@ -299,10 +301,10 @@ class ChatbotGUI:
                         self.add_message("🤖 机器人",
                                              "抱歉，意图识别失败，请重新输入。",
                                              is_bot=True)
-                    else:
-                        self.add_message("🤖 机器人",
-                                     "意图识别模块未初始化。",
-                                     is_bot=True)
+                    # else:
+                    #     self.add_message("🤖 机器人",
+                    #                  "意图识别模块未初始化。",
+                    #                  is_bot=True)
 
             # 恢复状态
             self.update_status("系统就绪，请输入消息...")

@@ -1,0 +1,101 @@
+intents {"校园设施", "校园活动", "负责人联系方式", "返回主菜单", "退出导航" ,"图书馆","食堂","教室","其他","功能查询"}
+
+wait_for_input:
+    reply "欢迎使用北邮校园导航！您需要什么帮助?（可输入“功能查询”获取更多信息）"
+    goto process_intent:
+
+process_intent:
+    pause_for_user_input
+    get_intent $user_input
+    reply "已识别意图: $intent"
+    if $intent == "校园设施" then goto show_facilities:
+    if $intent == "校园活动" then goto campus_events:
+    if $intent == "负责人联系方式" then goto contact_info:
+    if $intent == "返回主菜单" then goto wait_for_input:
+    if $intent == "退出导航" then goto exit_system:
+    if $intent == "图书馆" then goto REPLY_library:
+    if $intent == "食堂" then goto REPLY_canteen:
+    if $intent == "教室" then goto REPLY_classroom:
+    if $intent == "功能查询" then goto help:
+    goto handle_unknown:
+
+# 查询具体地点
+find_location:
+    reply "请输入您要查询的地点（如：主楼、图书馆、食堂、教学楼等）："
+    pause_for_user_input
+    get_intent $place
+    reply "正在查询 $place 的位置..."
+
+    goto wait_for_input:
+
+REPLY_library:
+    reply "图书馆在教室旁边"
+    goto wait_for_input:
+
+REPLY_canteen:
+    reply "食堂在吃饭的地方"
+    goto wait_for_input:
+
+REPLY_classroom:
+    reply "教室在图书馆旁边"
+    goto wait_for_input:
+
+# 校园设施查询
+show_facilities:
+    reply "校园设施列表："
+    reply "🏛️ 教学设施："
+    reply "  - 主教学楼（教一楼至教四楼）"
+    reply "  - 科研楼（新科研楼、旧科研楼）"
+    reply "  - 图书馆（开放时间：8:00-22:00）"
+    reply "🏸 体育设施："
+    reply "  - 体育馆（需预约）"
+    reply "  - 田径场（6:00-22:00开放）"
+    reply "  - 篮球场/网球场"
+    reply "🍽️ 生活设施："
+    reply "  - 学一、学二、学三食堂"
+    reply "  - 学生服务中心"
+    reply "  - 快递服务中心"
+    goto wait_for_input:
+
+# 校园活动信息
+campus_events:
+    reply "近期校园活动："
+    reply "📅 本周活动安排："
+    reply "  - 周一 19:00 学术讲座：人工智能前沿"
+    reply "    地点：主教学楼203"
+    reply "  - 周三 14:00 社团招新"
+    reply "    地点：学生活动中心"
+    reply "  - 周五 18:30 校园音乐会"
+    reply "    地点：田径场舞台"
+    reply "🔔 更多活动请关注北邮企业号"
+    goto wait_for_input:
+
+# 联系方式查询
+contact_info:
+    reply "常用联系方式："
+    reply "📞 校园总机：010-62281234"
+    reply "🆘 紧急电话："
+    reply "  - 保卫处：010-62281110"
+    reply "  - 校医院：010-62282625"
+    reply "📧 电子邮箱："
+    reply "  - 教务处：jwc@bupt.edu.cn"
+    reply "  - 学生处：xsc@bupt.edu.cn"
+    reply "🏢 办公时间：工作日 8:30-17:00"
+    goto wait_for_input:
+
+
+# 未知意图处理
+handle_unknown:
+    reply "抱歉，我没有理解您的需求。"
+    reply "您可以尝试：查询设施位置、找负责人联系方式、校园设施等"
+    goto wait_for_input:
+
+help:
+    reply "您可以尝试：查询设施位置、找负责人联系方式、校园设施等"
+    goto wait_for_input:
+
+# 退出系统
+exit_system:
+    reply "感谢使用北邮校园导航！"
+    reply "祝您在北邮学习生活愉快！"
+    exit

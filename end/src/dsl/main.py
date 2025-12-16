@@ -233,7 +233,7 @@ def main():
     """主函数 - 程序入口点"""
 
     # 配置参数
-    SCRIPT_PATH = "C:/Users/hotma/Desktop/DSL/end/DSL.txt"  # 默认脚本路径
+    SCRIPT_PATH = "C:/Users/hotma/Desktop/DSL/end/DSL2.txt"  # 默认脚本路径
 
     LLM_API_KEY = os.getenv("sk-5dd634970d3e447b99b7e9ad631a5e80")  # 从环境变量获取API密钥
     TIMEOUT_MINUTES = 15  # 默认15分钟无操作自动退出

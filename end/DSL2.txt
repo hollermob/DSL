@@ -1,0 +1,79 @@
+intents {"起床","不起床","找舍友帮忙","其他","认真听课"}
+game_start:
+    reply "================================"
+    reply "   北邮校园奇幻之旅 v1.0"
+    reply "================================"
+    reply "你是一名北邮新生，平凡的大学生活中..."
+    reply "一场奇妙的冒险正在等待着你！"
+    reply " "
+    reply "现在是早上7点半，上午有2节课，你选择：（睡觉或起床）"  
+    pause_for_user_input
+    get_intent $input
+    if $intent=="起床" then goto study:
+    if $intent=="找舍友帮忙" then goto egg:
+    if $intent=="不起床" then  goto sleep:
+
+sleep:
+	reply "辅导员发现你没有来上课，将你上报给学校..."
+	reply "你被开除了！"
+	goto end1:
+
+end1:
+	reply "游戏结束，结局1："
+	reply "亲朋好友都为你惋惜。"
+	reply "你痛哭流涕，离开了这个令人伤心的地方  QWQ"
+	exit
+
+egg:
+	reply "游戏结束，彩蛋结局："
+	reply "现在是晚上7点半，你睡了一个安稳觉，真是美好的一天！"
+	exit
+
+study:
+	reply "（你来到教室）"
+	reply "上课内容有点无聊，你选择：（玩游戏 或 听课）"
+	pause_for_user_input
+	get_intent $input
+	if $intent=="认真听课" then goto study1:
+	if $intent=="其他" then goto game1:
+game1:
+	reply "（混了一节课，什么也没听）"
+	goto game1_next:
+
+study1:
+	reply "（认真上课，学到很多知识）"
+	goto study1_next:
+
+game1_next:
+	reply "（你来到下一节课的教室）"
+	reply "上课内容有点无聊，你选择：（玩游戏 或 听课）"
+	pause_for_user_input
+	get_intent $input
+	if $intent=="认真听课" then goto normal:
+	if $intent=="其他" then goto game2:
+
+study1_next:
+	reply "（你来到下一节课的教室）"
+	reply "上课内容有点无聊，你选择：（玩游戏 或 听课）"
+	pause_for_user_input
+	get_intent $input
+	if $intent=="认真听课" then goto study2:
+	if $intent=="其他" then goto normal:
+
+game2:
+	reply "上完了了一天课，回想起来居然混了一整天？！"
+	reply "游戏结束，结局2："
+	reply "你悔恨不已，最后因过度羞愧，申请了退学..."
+	exit
+
+study2:
+	reply "上完了了一天课，这一天真是普普通通"
+	reply "游戏结束，结局2："
+	reply "天上天下，唯我独尊，通过认真学习，你成为史上最强大学生"
+	exit
+
+normal:
+	reply "上完了了一天课，这一天真是普普通通"
+	reply "游戏结束，结局2："
+	reply "你是一个普普通通的学生，学得普普通通，度过了普普通通的大学生活"
+	exit

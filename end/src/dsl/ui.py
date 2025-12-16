@@ -322,7 +322,7 @@ class ChatbotGUI:
 
         if self.controller:
             self.controller.reset_conversation()
-            self.add_message("🤖 机器人", "对话已清空，有什么可以帮助您？", is_bot=True)
+            self.add_message("🤖 机器人", "对话已清空，输入任意信息重新开始对话。", is_bot=True)
 
         messagebox.showinfo("清空对话", "对话记录已清空")
 

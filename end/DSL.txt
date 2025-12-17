@@ -7,7 +7,7 @@ wait_for_input:
 
 process_intent:    
     pause_for_user_input
-    get_intent $user_input
+    get_intent $intent
     reply "我识别到您的意图是: $intent"
 
     # 根据意图跳转到不同的处理流程

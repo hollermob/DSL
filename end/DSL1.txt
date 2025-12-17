@@ -6,7 +6,7 @@ wait_for_input:
 
 process_intent:
     pause_for_user_input
-    get_intent $user_input
+    get_intent $intent
     reply "已识别意图: $intent"
     if $intent == "校园设施" then goto show_facilities:
     if $intent == "校园活动" then goto campus_events:

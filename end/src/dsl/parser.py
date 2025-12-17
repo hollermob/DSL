@@ -1,6 +1,6 @@
 from typing import List
-from lexer import Token, TokenType, Lexer
-from nodes import *
+from src.dsl.lexer import Token, TokenType, Lexer
+from src.dsl.nodes import *
 
 
 class Parser:

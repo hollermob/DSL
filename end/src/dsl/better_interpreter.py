@@ -1,6 +1,6 @@
 from typing import Dict, Any, Callable, Optional
-from nodes import *
-import runtime
+from src.dsl.nodes import *
+from src.dsl.runtime import *
 
 
 class Interpreter:
@@ -147,7 +147,7 @@ class Interpreter:
 
 
         elif isinstance(node, ReplyNode):
-            # 遇到reply指令：立即输出并暂停
+            # 遇到reply指令：立即输出
             message = self._resolve_variables_in_string(node.message)
             return message  # 立即返回回复
 

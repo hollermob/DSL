@@ -6,7 +6,7 @@ from tkinter import scrolledtext, ttk, messagebox
 from datetime import datetime
 
 # 导入主控制器
-from main_controller import DSLController
+from src.dsl.main_controller import DSLController
 
 
 class ChatbotGUI:

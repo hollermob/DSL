@@ -1,14 +1,14 @@
 from typing import Dict, List, Optional
 
 # 导入DSL模块
-from lexer import Lexer
-from parser import Parser
-from runtime import RuntimeEnvironment
-from better_interpreter import Interpreter
-from nodes import ScriptNode
+from src.dsl.lexer import Lexer
+from src.dsl.parser import Parser
+from src.dsl.runtime import RuntimeEnvironment
+from src.dsl.better_interpreter import Interpreter
+from src.dsl.nodes import ScriptNode
 
-# 导入LLM模块（使用前面实现的）
-from ai_client import IntentClassifier
+# 导入LLM模块
+from src.dsl.ai_client import IntentClassifier
 
 
 class DSLController:
